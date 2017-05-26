@@ -3,7 +3,7 @@
 </template>
 <script type="es6">
     import Const from 'common/const';
-    import FileImporter from './fileImporter';
+    import FileImporter from './file-importer';
     export default{
         components: {
             'file-importer': FileImporter

@@ -1,20 +1,22 @@
 <template>
     <div>
         <div class="clearfix mb10">
-            <importer class="mr10"
-                      method="post"
+            <importer method="post"
                       :server="importerConfig.server"
                       :button-text="importerConfig.buttonText"
                       @success="importSuccess"
                       @error="importError"></importer>
+            <a :href="exportLink" type="button" class="btn btn-sm btn-success">
+                <span class="glyphicon glyphicon-export"></span>
+                导出
+            </a>
             <button type="button" class="btn btn-sm btn-success" @click="toggleStatus" v-cloak>
-                <span class="glyphicon glyphicon-ok"></span> 启用
+                <span class="glyphicon glyphicon-ok"></span> 生效
             </button>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">操作信息</h3>
-
+                操作信息
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -26,11 +28,10 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">数据列表
-                    <span class="pull-right">
-                        {{listStatus}}
+                数据列表
+                    <span class="pull-right" :class="listStatus ? 'text-success' : 'text-danger'">
+                        {{listStatus ? '已生效' : '未生效'}}
                     </span>
-                </h3>
             </div>
             <list :config="list.config"
                   :data="list.data"
@@ -125,21 +126,17 @@
                         extensions: 'csv'
                     },
                     server: Interface.fileImporter.importFile
-                }
-            }
-        },
-        computed: {
-            //获取整个列表的启用状态,请根据具体业务需要检测
-            listStatus(){
-                if (this.list.data.length > 0 && typeof this.list.data[0].status !== 'undefined') {
-                    return Const.getter.getValByKey('status', this.list.data[0].status);
-                } else {
-                    return '';
-                }
+                },
+                listStatus: true
             }
         },
         created(){
             this.getListData();
+        },
+        computed: {
+            exportLink(){
+                return Interface.fileImporter.exportFile + '?os=' + this.os;
+            }
         },
         methods: {
             //获取列表数据
@@ -186,6 +183,7 @@
                 res = utility.objTransfer.lowerKey(res);
                 if (res.successed) {
                     this.list.data = res.data;
+                    this.listStatus = false;
                     new MiniMsg({
                         type: 'success',
                         content: '导入成功!'
@@ -223,8 +221,8 @@
                 popoverConfirm.init({
                     UID: $trigger,
                     placement: 'right',
-                    title: '确定启用吗？',
-                    loadingContent: '启用中...',
+                    title: '确定生效吗？',
+                    loadingContent: '生效中...',
                     $trigger: $trigger,
                     ajax: {
                         config: {
