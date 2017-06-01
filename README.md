@@ -4,7 +4,7 @@
 
 ## 页面截图
 
-[!示例](https://github.com/urlego/fileImporter/blob/master/示例图.png)
+![示例](https://github.com/urlego/fileImporter/blob/master/示例图.png)
 
 ## 更新日志
 
